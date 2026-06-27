@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import argparse
+
 def compare_passwords(target_password, password_file):
     try:
         with open(password_file, "r", encoding="utf-8", errors="ignore") as file:
@@ -11,20 +13,27 @@ def compare_passwords(target_password, password_file):
                     print(f"[+] Found at line: {count}")
                     return
 
-        print("[-] Password not found in the list.")
+        print("[-] Password not found.")
 
     except FileNotFoundError:
-        print("[-] Password list file not found.")
-    except Exception as e:
-        print(f"Error: {e}")
+        print("[-] Password list not found.")
 
+parser = argparse.ArgumentParser(
+    description="Password List Comparator"
+)
 
-def main():
-    target_password = input("Enter the password to search for: ")
-    password_file = input("Enter the path to the password list: ")
+parser.add_argument(
+    "-p", "--password",
+    required=True,
+    help="Password to search for"
+)
 
-    compare_passwords(target_password, password_file)
+parser.add_argument(
+    "-l", "--list",
+    required=True,
+    help="Path to the password list"
+)
 
+args = parser.parse_args()
 
-if __name__ == "__main__":
-    main()
+compare_passwords(args.password, args.list)
